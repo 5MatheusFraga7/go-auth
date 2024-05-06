@@ -3,7 +3,7 @@ package adapters
 import (
 	"database/sql"
 	"fmt"
-	"go-auth/cmd/internal/db"
+	"go-auth/internal/db"
 
 	_ "github.com/lib/pq"
 )
