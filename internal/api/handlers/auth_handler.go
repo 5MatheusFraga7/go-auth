@@ -27,14 +27,20 @@ func (p *AuthHandler) AuthenticateUser(w http.ResponseWriter, r *http.Request) {
 	userRepository := repository.NewUserRepository(adapters.NewPostgreSQLAdapter())
 	auth := models.Authenticator{UserRepository: userRepository}
 
-	if auth.HasUser(data.Email) {
-		log.Printf(fmt.Sprintf("ACHAMOS O USER!!! " + data.Email))
+	status := ""
+	attr := "status"
+
+	hasUser, user := auth.HasUser(data.Email)
+	if hasUser && auth.CheckPasswordHash(data.Password, user[0].EncryptedPassword) {
+		status, _ = auth.CreateNewJWT(data.Email)
+		attr = "token"
 	} else {
-		log.Printf(fmt.Sprintf("USER NOT FOUND :( " + data.Email))
+		status = "invalid credentials"
+		log.Printf(fmt.Sprintf("invalid credentials :( " + data.Email))
 	}
 
 	dataResponse := map[string]interface{}{
-		"status": "SUCCESS",
+		attr: status,
 	}
 
 	jsonData, _ := json.Marshal(dataResponse)

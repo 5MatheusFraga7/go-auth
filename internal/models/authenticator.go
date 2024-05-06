@@ -1,6 +1,14 @@
 package models
 
 import (
+	"fmt"
+	"log"
+	"os"
+	"path/filepath"
+	"time"
+
+	"github.com/golang-jwt/jwt/v5"
+	"github.com/joho/godotenv"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -12,10 +20,10 @@ type Authenticator struct {
 	UserRepository UserRepository
 }
 
-func (auth *Authenticator) HasUser(email string) bool {
+func (auth *Authenticator) HasUser(email string) (bool, []User) {
 	user := auth.UserRepository.FindByEmail(email)
 
-	return len(user) != 0
+	return len(user) != 0, user
 }
 
 func (auth *Authenticator) HashPassword(password string) (string, error) {
@@ -29,4 +37,60 @@ func (auth *Authenticator) HashPassword(password string) (string, error) {
 func (auth *Authenticator) CheckPasswordHash(password, hash string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 	return err == nil
+}
+
+func (auth *Authenticator) CreateNewJWT(email string) (string, error) {
+	secretKey := getSecretKey()
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256,
+		jwt.MapClaims{
+			"email": email,
+			"exp":   time.Now().Add(time.Hour * 24).Unix(),
+		})
+
+	tokenString, err := token.SignedString(secretKey)
+	if err != nil {
+		return "", err
+	}
+
+	return tokenString, nil
+}
+
+func VerifyJWT(tokenString string) error {
+	secretKey := getSecretKey()
+
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		return secretKey, nil
+	})
+
+	if err != nil {
+		return err
+	}
+
+	if !token.Valid {
+		return fmt.Errorf("invalid token")
+	}
+
+	return nil
+}
+
+func getSecretKey() string {
+	dir, err := os.Getwd()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	envFile := filepath.Join(dir, ".env")
+
+	if err != nil {
+		log.Fatalf("Erro ao carregar arquivo .env: %v", err)
+		return ""
+	}
+
+	err = godotenv.Load(envFile)
+	if err != nil {
+		log.Fatalf("Erro ao carregar arquivo .env: %v", err)
+		return ""
+	}
+
+	return os.Getenv("SECRET_KEY")
 }

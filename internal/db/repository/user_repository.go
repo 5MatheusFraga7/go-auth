@@ -11,6 +11,8 @@ type UserRepository struct {
 	DbAdapter db.Database
 }
 
+// Construtor do repositório de usuários, recebendo qual banco deve conectar
+
 func NewUserRepository(dbAdapter db.Database) *UserRepository {
 	return &UserRepository{
 		DbAdapter: dbAdapter,
