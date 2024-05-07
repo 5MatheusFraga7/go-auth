@@ -34,7 +34,7 @@ func (auth *Authenticator) HashPassword(password string) (string, error) {
 	return string(hashedPassword), nil
 }
 
-func (auth *Authenticator) CheckPasswordHash(password, hash string) bool {
+func (auth *Authenticator) CheckPassword(password, hash string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 	return err == nil
 }
@@ -49,7 +49,6 @@ func (auth *Authenticator) CreateNewJWT(email string) (string, error) {
 		})
 
 	tokenString, err := token.SignedString(secretKey)
-	log.Printf(tokenString)
 
 	if err != nil {
 		log.Printf(fmt.Sprintf("erro aqui: %s", err))

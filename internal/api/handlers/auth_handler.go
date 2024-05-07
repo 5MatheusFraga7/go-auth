@@ -31,7 +31,7 @@ func (p *AuthHandler) AuthenticateUser(w http.ResponseWriter, r *http.Request) {
 	attr := "status"
 
 	hasUser, user := auth.HasUser(data.Email)
-	if hasUser && auth.CheckPasswordHash(data.Password, user[0].EncryptedPassword) {
+	if hasUser && auth.CheckPassword(data.Password, user[0].EncryptedPassword) {
 		status, _ = auth.CreateNewJWT(data.Email)
 		attr = "token"
 	} else {

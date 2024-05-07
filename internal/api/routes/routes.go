@@ -13,9 +13,11 @@ func SetupRouter() http.Handler {
 	router.Use(LoggerMiddleware)
 	router.NotFoundHandler = http.HandlerFunc(HandleNotFound)
 	p := handlers.AuthHandler{}
+	s := handlers.SignupHandler{}
 
 	// Routes
-	router.HandleFunc("/auth", p.AuthenticateUser).Methods("POST")
+	router.HandleFunc("/signin", p.AuthenticateUser).Methods("POST")
+	router.HandleFunc("/signup", s.CreateUser).Methods("POST")
 
 	return router
 }
