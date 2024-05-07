@@ -33,6 +33,8 @@ func (sh *SignupHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	userRepository.Create(data)
+
 	dataResponse := map[string]interface{}{
 		"Status": "Success",
 		"User":   data,

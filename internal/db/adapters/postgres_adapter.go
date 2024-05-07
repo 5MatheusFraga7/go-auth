@@ -39,7 +39,7 @@ func (p *PostgreSQLAdapter) Close() error {
 	return nil
 }
 
-func (p *PostgreSQLAdapter) Exec(query string, args ...interface{}) (sql.Result, error) {
+func (p *PostgreSQLAdapter) Exec(query string, args ...interface{}) (*sql.Result, error) {
 	if p.db == nil {
 		return nil, fmt.Errorf("não é possível executar consulta: adaptador não conectado ao banco de dados")
 	}
@@ -49,7 +49,7 @@ func (p *PostgreSQLAdapter) Exec(query string, args ...interface{}) (sql.Result,
 		return nil, fmt.Errorf("erro ao executar consulta SQL: %v", err)
 	}
 
-	return result, nil
+	return &result, nil
 }
 
 func (p *PostgreSQLAdapter) Query(query string, args ...interface{}) (*sql.Rows, error) {

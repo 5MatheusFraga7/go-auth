@@ -26,14 +26,6 @@ func (auth *Authenticator) HasUser(email string) (bool, []User) {
 	return len(user) != 0, user
 }
 
-func (auth *Authenticator) HashPassword(password string) (string, error) {
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-	if err != nil {
-		return "", err
-	}
-	return string(hashedPassword), nil
-}
-
 func (auth *Authenticator) CheckPassword(password, hash string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 	return err == nil
