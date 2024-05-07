@@ -41,6 +41,7 @@ func (auth *Authenticator) CheckPasswordHash(password, hash string) bool {
 
 func (auth *Authenticator) CreateNewJWT(email string) (string, error) {
 	secretKey := getSecretKey()
+
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256,
 		jwt.MapClaims{
 			"email": email,
@@ -48,7 +49,10 @@ func (auth *Authenticator) CreateNewJWT(email string) (string, error) {
 		})
 
 	tokenString, err := token.SignedString(secretKey)
+	log.Printf(tokenString)
+
 	if err != nil {
+		log.Printf(fmt.Sprintf("erro aqui: %s", err))
 		return "", err
 	}
 
@@ -73,7 +77,7 @@ func VerifyJWT(tokenString string) error {
 	return nil
 }
 
-func getSecretKey() string {
+func getSecretKey() []byte {
 	dir, err := os.Getwd()
 	if err != nil {
 		log.Fatal(err)
@@ -83,14 +87,14 @@ func getSecretKey() string {
 
 	if err != nil {
 		log.Fatalf("Erro ao carregar arquivo .env: %v", err)
-		return ""
+		return nil
 	}
 
 	err = godotenv.Load(envFile)
 	if err != nil {
 		log.Fatalf("Erro ao carregar arquivo .env: %v", err)
-		return ""
+		return nil
 	}
 
-	return os.Getenv("SECRET_KEY")
+	return []byte(os.Getenv("SECRET_KEY"))
 }
