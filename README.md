@@ -16,17 +16,19 @@
 ## Criar JWT BEARER logic[]
   JÁ CRIAMOS A CONFERENICA NO BANCO CASO O USER EXISTA
   FALTA: 
-    [] REOTNRAR FALSE QUANDO NÃO EXISTIR
-    [] REOTNRAR FALSE QUANDO NÃO EXISTIR e a senha não for válida
-    [] retornar o JWT quando o user existir e a senha for válida
+    [x] REOTNRAR FALSE QUANDO NÃO EXISTIR
+    [x] REOTNRAR FALSE QUANDO NÃO EXISTIR e a senha não for válida
+    [x] retornar o JWT quando o user existir e a senha for válida
 
 ## Criar sign-in
+  [x] 
 
 ## Criar token que expira
   ## -> o jwt já faz isso, podemos só validar e-mail e senha e retornar um jwt para o usuário
+  [x] 
 
 ## ROTAS:
-  ### SIGNIN
-  ### LOGIN
+  ### SIGNIN[x]
+  ### SIGNUP[x]
 
 
