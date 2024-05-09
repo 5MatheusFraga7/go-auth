@@ -43,14 +43,14 @@ func (auth *Authenticator) CreateNewJWT(email string) (string, error) {
 	tokenString, err := token.SignedString(secretKey)
 
 	if err != nil {
-		log.Printf(fmt.Sprintf("erro aqui: %s", err))
+		log.Printf(fmt.Sprintf("Error new token: %s", err))
 		return "", err
 	}
 
 	return tokenString, nil
 }
 
-func VerifyJWT(tokenString string) error {
+func (auth *Authenticator) VerifyJWT(tokenString string) error {
 	secretKey := getSecretKey()
 
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
